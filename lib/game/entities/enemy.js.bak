@@ -84,28 +84,10 @@ ig.module(
             //var rand = Math.floor((Math.random() * 20) + 0); // 0 - 20
             //this.pos.x -= 40;//= 40;//-50;//-= 50;//(50 + rand);
             //this.pos.y -= 40;//-50;//-= 50;//(50 + rand);
-            this.pos.x = 40;
-            this.pos.y = 40;
+            this.pos.x = 50;
+            this.pos.y = 50;
             this.origin.x = this.pos.x;
             this.origin.y = this.pos.y;
-            
-            this.pathing = [
-                {x:  40, y:  40},
-                {x:  55, y:  45},
-                {x:  70, y:  50},
-                {x:  80, y:  60},
-                {x:  96, y:  70},
-                {x: 107, y: 100},
-                {x:  80, y: 120},
-                {x:  50, y: 106},
-                {x:  66, y:  77},
-                {x:  95, y:  63},
-                {x: 128, y:  60},
-                {x: 160, y:  52}
-            ];
-            this.pathingIndex = 0;
-            this.pathingX = true;
-            this.pathingY = true;
             
         },
         
@@ -130,7 +112,7 @@ ig.module(
             this.imgDot.draw(this.origin.x, this.origin.y);
             this.imgDot.draw(this.target.x, this.target.y);
             
-            if (1 == 0)
+            if (1 == 1)
             {
                 // X := originX + sin(angle)*radius;
                 // Y := originY + cos(angle)*radius;
@@ -142,14 +124,6 @@ ig.module(
                     var pos_y = this.target.y + (Math.cos(angle) * radius);
                     this.imgDot.draw((pos_x - ig.game.screen.x), (pos_y - ig.game.screen.y));
                     angle = i;
-                }
-            }
-            
-            if (1 == 1)
-            {
-                for (var pt in this.pathing)
-                {
-                    this.imgDot.draw(this.pathing[pt].x, this.pathing[pt].y);
                 }
             }
             
@@ -393,6 +367,10 @@ ig.module(
                 this.vel.x = xVel;
                 this.vel.y = yVel;
                 this.angle += 0.02;
+                if (this.angle > 6)
+                {
+                    this.angle = 0;//(6 - this.angle);
+                }
             }
             
             if (1 == 0)
@@ -559,92 +537,6 @@ ig.module(
                 
                 this.pos.x = xPos;
                 this.pos.y = yPos;
-            }
-            
-            // move from point to point
-            if (1 == 1)
-            {
-                var pos = this.pathing[this.pathingIndex];
-                
-                /*
-                    vel.x > 0 : moving right
-                    vel.x < 0 : moving left
-                    
-                    x-axis : -2 -1 0 1 2
-                */
-                
-                // if moving right
-                if (this.vel.x > 0)
-                {
-                    if (this.pos.x > pos.x)
-                    {
-                        this.pathingX = true;
-                    }
-                }
-                // else, if moving left
-                else if (this.vel.x < 0)
-                {
-                    if (this.pos.x < pos.x)
-                    {
-                        this.pathingX = true;
-                    }
-                }
-                
-                /*
-                    vel.y > 0 : moving down
-                    vel.y < 0 : moving up
-                    
-                    y-axis:
-                    -2
-                    -1
-                     0
-                     1
-                     2
-                */
-                
-                // if moving down
-                if (this.vel.y > 0)
-                {
-                    if (this.pos.y > pos.y)
-                    {
-                        this.pathingY = true;
-                    }
-                }
-                // else, if moving up
-                else if (this.vel.y < 0)
-                {
-                    if (this.pos.y < pos.y)
-                    {
-                        this.pathingY = true;
-                    }
-                }
-                
-                // if moved passed the current point
-                if (this.pathingX && this.pathingY)
-                {
-                    // get next point
-                    this.pathingIndex++;
-                    if (this.pathingIndex >= this.pathing.length)
-                    {
-                        this.pathingIndex = 0;
-                    }
-                    var pt = this.pathing[this.pathingIndex];
-                    
-                    // get angle to next point
-                    var my = (pt.y - this.pos.y);
-                    var mx = (pt.x - this.pos.x);
-                    this.angle = Math.atan2(my, mx);
-                    
-                    var xVel = (Math.cos(this.angle) * this.speed*5);
-                    var yVel = (Math.sin(this.angle) * this.speed*5);
-                    
-                    this.vel.x = xVel;
-                    this.vel.y = yVel;
-                    
-                    this.pathingX = false;
-                    this.pathingY = false;
-                }
-                
             }
             
         },
